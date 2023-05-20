@@ -1,8 +1,8 @@
 import http from 'http';
 import { Server } from 'socket.io';
 import express, { Express, Request, Response } from 'express';
-import {handleSocketConnection} from './sockets';
-import Storage from './interfaces/Storage';
+import { handleSocketConnection } from './sockets';
+import Storage from './entities/Storage';
 
 const app = express();
 const server = http.createServer(app);
@@ -11,11 +11,11 @@ const storage = new Storage();
 
 setInterval(() => {
   const endedGameIds = storage.updateGames();
-  endedGameIds.forEach(({gameId, winner, loser}) => {
+  endedGameIds.forEach(({ gameId, winner, loser }) => {
     io.to(winner).emit('WON', gameId);
     io.to(loser).emit('LOST', gameId);
   })
-}, 1000);
+}, 500);
 
 
 app.get('/', (req: Request, res: Response) => {

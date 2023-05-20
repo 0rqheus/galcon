@@ -1,35 +1,22 @@
-const MAP_W = 50
-const MAP_H = 20
+export const MAP_W = 500
+export const MAP_H = 200
 
-const PLANET_D_MAX_DIVISOR = 3
-const PLANET_D_MIN_DIVISOR = 24
+export const SPEED = 500
 
-const PLANET_STARTER_D      = 2
-const PLANET_STARTER_HEALTH = 3 
+export const PLANET_D_MAX_DIVISOR = 3
+export const PLANET_D_MIN_DIVISOR = 24
 
-const ATTEMPTS = 10
+export const PLANET_STARTER_D      = 2
+export const PLANET_STARTER_HEALTH = 3 
 
-const MAX_HEALTH = 50
-const MIN_HEALTH = 10
+export const ATTEMPTS = 1000
+
+export const MAX_HEALTH = 50
+export const MIN_HEALTH = 10
 
 // const PLANET_DISTANCE_MIN = 
 
-const PLANET_N_MIN = 6
-const PLANET_N_MAX = 14
+export const PLANET_N_MIN = 6
+export const PLANET_N_MAX = 14
 
-const PLAYER_COUNT = 2
-
-export { 
-  MAP_H, 
-  MAP_W, 
-  PLANET_D_MAX_DIVISOR, 
-  PLANET_D_MIN_DIVISOR, 
-  ATTEMPTS,
-  PLANET_STARTER_D,
-  PLANET_STARTER_HEALTH,
-  MAX_HEALTH,
-  MIN_HEALTH,
-  PLANET_N_MAX,
-  PLANET_N_MIN,
-  PLAYER_COUNT
-}
+export const PLAYER_COUNT = 2
