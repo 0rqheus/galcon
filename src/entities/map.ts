@@ -53,12 +53,12 @@ export class GameMap {
     return getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y)
   }
 
-  public generateMap() {
+  public generateMap(ownersId: number[]) {
     const planetNumber: number = Math.ceil(getRandomFloat(PLANET_N_MIN, PLANET_N_MAX))
     
     // player starter planets
     for (let i = 0; i < PLAYER_COUNT; i++) {
-      this.planets.push(this.generatePlanet(true, i, i + 1))
+      this.planets.push(this.generatePlanet(true, i, ownersId[i]))
     }
 
     // neutral planets

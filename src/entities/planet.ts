@@ -28,9 +28,9 @@ export class Point {
 
 
 export class Planet {
-  private id:          number;
+  private id:               number;
   private ownerId:          number | null;
-  private radius:             number;
+  private radius:           number;
   private fleet:            number;
   private coords:           Point;
   private fleetGenSpeed:    number;
@@ -69,14 +69,28 @@ export class Planet {
     return JSON.stringify(this, null, 2)
   }
 
-  get owner(): number | null {
+  get ownerID(): number | null {
     return this.ownerId;
   }
 
-  set produce(ships: number) {
-    // dont care lol we got genspeed
+  set owner(newOwnerId: number) {
+    this.ownerId = newOwnerId
+  }
+
+  private updateFleet(ships: number) {
+    this.fleet += ships
+  }
+
+  public produceShips() {
     if (this.owner !== null) {
       this.fleet += this.fleetGenSpeed
     }
   }
+
+  public sendFleet(): number {
+    let ships: number = Math.floor(this.fleet / 2);
+    this.updateFleet(-ships);
+    return ships;
+  }
+
 }
