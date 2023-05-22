@@ -84,11 +84,11 @@ export default class Game {
     }
 
     const unitsAmount = source.sendFleet();
-    const timeToReach = this.getTimeToReach(source, destination);
+    const timeToReachInSec = this.getTimeToReach(source, destination);
 
-    setTimeout(() => destination.receiveFleet(playerId, unitsAmount), timeToReach);
+    setTimeout(() => destination.receiveFleet(playerId, unitsAmount), timeToReachInSec);
 
-    return { unitsAmount, timeToReach };
+    return { unitsAmount, timeToReachInSec };
   }
 
   getTimeToReach(p1: Planet, p2: Planet): number {

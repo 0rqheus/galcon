@@ -37,60 +37,60 @@ export class GameMap {
   }
 
   get planetArray(): Planet[] {
-    return this.planets
+    return this.planets;
   }
 
   get print(): string {
-    return JSON.stringify(this, null, 2)
+    return JSON.stringify(this, null, 2);
   }
 
   getWinner() {
     let owners = this.planets.map(planet => planet.owner);
 
     if (owners.every((val, i, arr) => val === arr[0])) {
-      return owners[0]
+      return owners[0];
     }
 
     return null;
   }
 
   public getDistanceBetweenPlanets(p1: Planet, p2: Planet): number {
-    return getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y)
+    return getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y);
   }
 
   public generateMap(ownersId: string[]) {
-    const planetNumber: number = Math.ceil(getRandomFloat(PLANET_N_MIN, PLANET_N_MAX))
+    const planetNumber: number = Math.ceil(getRandomFloat(PLANET_N_MIN, PLANET_N_MAX));
 
     // player starter planets
     for (let i = 0; i < PLAYER_COUNT; i++) {
-      this.planets.push(this.generatePlanet(true, i, ownersId[i]))
+      this.planets.push(this.generatePlanet(true, i, ownersId[i]));
     }
 
     // neutral planets
     for (let i = 0; i < planetNumber; i++) {
       let planet: Planet = this.generatePlanet(false, i + PLAYER_COUNT, null);
-      this.planets.push(planet)
+      this.planets.push(planet);
     }
 
-    return this.planets
+    return this.planets;
   }
 
   private generatePlanet(starter: boolean, id: number, owner: string | null) {
     // planet should not take too much space.
     // diameter will not be more than minsize / max_divisor
     let minDim: number = this.w > this.h ? this.h : this.w;
-    console.log(minDim)
+    console.log(minDim);
 
     // 0. generate health/fleet
-    let fleet: number = Math.ceil(getRandomFloat(MIN_HEALTH, MAX_HEALTH))
+    let fleet: number = Math.ceil(getRandomFloat(MIN_HEALTH, MAX_HEALTH));
     // 1. generate radius/diameter
     let diameter: number = getRandomFloat(
       minDim / PLANET_D_MIN_DIVISOR,
       minDim / PLANET_D_MAX_DIVISOR);
 
     if (starter) {
-      fleet = PLANET_STARTER_HEALTH
-      diameter = PLANET_STARTER_D
+      fleet = PLANET_STARTER_HEALTH;
+      diameter = PLANET_STARTER_D;
     }
     console.log(diameter)
     let radius: number = diameter / 2;
@@ -113,27 +113,27 @@ export class GameMap {
 
           let overlap: boolean = this.checkOverlap(
             planet.x, planet.y, planet.rad,
-            x, y, radius)
+            x, y, radius);
 
           if (overlap) {
-            generated = false
+            generated = false;
           }
 
         })
 
         if (generated) {
-          break
+          break;
         }
       }
       else {
-        break
+        break;
       }
     }
     if (!generated) {
-      throw new Error('cannot generate')
+      throw new Error('cannot generate');
     }
 
-    let res: Planet = new Planet(id, owner, radius, fleet, new Point(x, y))
+    let res: Planet = new Planet(id, owner, radius, fleet, new Point(x, y));
 
     return res;
   }
