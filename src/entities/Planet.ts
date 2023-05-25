@@ -1,3 +1,4 @@
+import { PlanetDetails } from "../interfaces";
 import { Point } from "./Point";
 
 export class Planet {
@@ -80,6 +81,17 @@ export class Planet {
         this._fleet += amount - this.fleet
         this.ownerId = senderId;
       }
+    }
+  }
+
+  getPlanetDetails(): PlanetDetails {
+    return {
+      id: this.id,
+      ownerId: this.ownerId,
+      coords: this.coords,
+      radius: this.radius,
+      fleet: this.fleet,
+      fleetGenSpeed: this.fleetGenSpeed,
     }
   }
 }

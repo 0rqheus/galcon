@@ -1,4 +1,4 @@
-import { Planet } from "../entities/Planet"
+import { PlanetDetails } from "./PlanetDetails"
 
 export interface GameDetails {
   id: string,
@@ -7,6 +7,6 @@ export interface GameDetails {
   map: {
     w: number,
     h: number,
-    planetArray: Planet[]
+    planetArray: PlanetDetails[]
   }
 }
