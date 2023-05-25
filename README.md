@@ -17,10 +17,10 @@ Backend server for galcon 2 game. It uses socket.io library to provide real-time
 
   __Parameters__:
   * gameId: `string` — the Id of the game
-  * callback: `(game: GameDetails) => void` — a callback function that returns game details.
+  * callback: `(game: GameParticipants) => void` — a callback function that returns game participants.
   
   __Description__: Subscribes client socket to the game room, emits `PLAYER_JOINED` event to the game room 
-  and invokes the provided callback function with game details.
+  and invokes the provided callback function with game participants.
 
 - __Event__: `START_GAME`
 
@@ -50,9 +50,10 @@ Backend server for galcon 2 game. It uses socket.io library to provide real-time
 
 - __Event__: `GAME_STARTED`
 
-  __Parameters__: -
+  __Parameters__:
+  * details: `GameDetails` — the game detail
   
-  __Description__: Emits the event to all players when host starts the game.
+  __Description__: Emits the event with game detail to all players when host starts the game.
 
 - __Event__: `SEND_UNITS`
 

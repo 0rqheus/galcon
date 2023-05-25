@@ -1,5 +1,12 @@
+import { Planet } from "../entities/Planet"
+
 export interface GameDetails {
-  gameId: string,
+  id: string,
   player1: string,
-  player2: string
+  player2: string,
+  map: {
+    w: number,
+    h: number,
+    planetArray: Planet[]
+  }
 }

@@ -1,6 +1,6 @@
 import { Server, Socket } from 'socket.io';
 import Storage from './entities/Storage';
-import {IncomingEvents, OutcomingEvents, GameDetails, SendUnitsDetails} from './interfaces';
+import {IncomingEvents, OutcomingEvents, GameParticipants, SendUnitsDetails} from './interfaces';
 
 export function handleSocketConnection(io: Server, socket: Socket, storage: Storage) {
   console.log(`${socket.id} connected`);
@@ -11,7 +11,7 @@ export function handleSocketConnection(io: Server, socket: Socket, storage: Stor
     callback(gameId);
   });
 
-  socket.on(IncomingEvents.JOIN_GAME, (gameId: string, callback: (game: GameDetails) => void) => {
+  socket.on(IncomingEvents.JOIN_GAME, (gameId: string, callback: (game: GameParticipants) => void) => {
     const game = storage.getGame(gameId)
 
     if (game) {
@@ -29,7 +29,7 @@ export function handleSocketConnection(io: Server, socket: Socket, storage: Stor
 
     if (game) {
       game.startGame();
-      io.to(gameId).emit(OutcomingEvents.GAME_STARTED)
+      io.to(gameId).emit(OutcomingEvents.GAME_STARTED, game.getGameDetails())
     }
   });
 

@@ -1,4 +1,5 @@
 import { SPEED } from "../config";
+import { GameDetails } from "../interfaces";
 import { getDistanceBetweenPoints } from "../utils/utils";
 import { GameMap } from "./GameMap";
 import { Planet } from "./Planet";
@@ -95,5 +96,18 @@ export default class Game {
     const dist = getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y);
     const timeToReach = dist * SPEED;
     return timeToReach;
+  }
+
+  getGameDetails(): GameDetails {
+    return {
+      id: this.id,
+      player1: this._player1,
+      player2: this._player2,
+      map: {
+        w: this.map.w,
+        h: this.map.h,
+        planetArray: this.map.planetArray
+      }
+    }
   }
 }

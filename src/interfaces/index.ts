@@ -1,3 +1,4 @@
+export * from './GameParticipants'
 export * from './GameDetails'
 export * from './IncomingEvents'
 export * from './OutcomingEvents'
