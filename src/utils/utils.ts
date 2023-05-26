@@ -8,5 +8,5 @@ export function getRandomFloat(min: number, max: number): number {
 
 export function getDistanceBetweenPoints(x1: number, y1: number, x2: number, y2: number) {
   // d=√((x2 – x1)² + (y2 – y1)²
-  return Math.sqrt(Math.pow(x2 - x1, 2) - Math.pow(y2 - y1, 2))
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
 }
