@@ -3,7 +3,7 @@ export const MAP_H = 200
 
 export const PLANET_DISTANCE_DELTA = 9
 
-export const SPEED = 500
+export const SPEED = 50
 
 export const PLAYER_COUNT = 2
 

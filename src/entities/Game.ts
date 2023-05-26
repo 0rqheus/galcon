@@ -94,7 +94,7 @@ export default class Game {
 
   getTimeToReach(p1: Planet, p2: Planet): number {
     const dist = getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y);
-    const timeToReach = dist * SPEED;
+    const timeToReach = dist / SPEED;
     return timeToReach;
   }
 
