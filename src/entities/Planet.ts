@@ -28,7 +28,7 @@ export class Planet {
   }
 
   get y(): number {
-    return this.coords.x
+    return this.coords.y
   }
 
   get rad(): number {
