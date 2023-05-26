@@ -1,16 +1,17 @@
 import {
   MAP_W,
   MAP_H,
-  PLANET_D_MAX_DIVISOR,
-  PLANET_D_MIN_DIVISOR,
+  PLAYER_COUNT,
   ATTEMPTS,
-  MAX_HEALTH,
-  MIN_HEALTH,
-  PLANET_STARTER_HEALTH,
-  PLANET_STARTER_D,
+  RADIUS_STARTER,
+  HEALTH_STARTER,
+  HEALTH_MIN,
+  HEALTH_MAX,
+  RADIUS_MIN,
+  RADIUS_MAX,
   PLANET_N_MAX,
   PLANET_N_MIN,
-  PLAYER_COUNT
+  PLANET_DISTANCE_DELTA
 } from "../config";
 import { getDistanceBetweenPoints, getRandomFloat } from "../utils/utils";
 import { Point } from "./Point";
@@ -76,28 +77,17 @@ export class GameMap {
   }
 
   private generatePlanet(starter: boolean, id: number, owner: string | null) {
-    // planet should not take too much space.
-    // diameter will not be more than minsize / max_divisor
-    let minDim: number = this.w > this.h ? this.h : this.w;
-    console.log(minDim);
 
-    // 0. generate health/fleet
-    let fleet: number = Math.ceil(getRandomFloat(MIN_HEALTH, MAX_HEALTH));
-    // 1. generate radius/diameter
-    let diameter: number = getRandomFloat(
-      minDim / PLANET_D_MIN_DIVISOR,
-      minDim / PLANET_D_MAX_DIVISOR);
+    let fleet: number = Math.ceil(getRandomFloat(HEALTH_MIN, HEALTH_MAX));
+
+    let radius: number = Math.floor(getRandomFloat(RADIUS_MIN, RADIUS_MAX));
 
     if (starter) {
-      fleet = PLANET_STARTER_HEALTH;
-      diameter = PLANET_STARTER_D;
+      fleet  = HEALTH_STARTER;
+      radius = RADIUS_STARTER;
     }
-    console.log(diameter)
-    let radius: number = diameter / 2;
 
 
-    // 2. generate coordinates
-    // a cycle that generates until its ok
     let x: number = -1;
     let y: number = -1;
 
@@ -111,9 +101,7 @@ export class GameMap {
       if (this.planets.length > 0) {
         this.planets.forEach(planet => {
 
-          let overlap: boolean = this.checkOverlap(
-            planet.x, planet.y, planet.rad,
-            x, y, radius);
+          let overlap: boolean = this.checkOverlap( planet.x, planet.y, planet.rad, x, y, radius);
 
           if (overlap) {
             generated = false;
@@ -139,10 +127,8 @@ export class GameMap {
   }
 
   private checkOverlap(x1: number, y1: number, rad1: number, x2: number, y2: number, rad2: number) {
-    // overlap is when distance between points
-    // is less than sum of radiuses
     let distance: number = getDistanceBetweenPoints(x1, y1, x2, y2);
-    let minDistance: number = rad1 + rad2;
+    let minDistance: number = rad1 + rad2 + PLANET_DISTANCE_DELTA;
 
     return distance < minDistance;
   }
