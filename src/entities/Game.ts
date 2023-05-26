@@ -77,7 +77,7 @@ export default class Game {
     if (!destination) {
       throw new Error('no destination');
     }
-    if (source?.ownerID === playerId) {
+    if (source?.ownerID !== playerId) {
       throw new Error('wrong owner');
     }
     if (source.fleet < 2) {
