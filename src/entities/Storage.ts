@@ -26,10 +26,11 @@ export default class Storage {
     let id = '';
 
     while (notUnique) {
+      notUnique = false
       id = generateId();
 
       if (this.games.find((g) => g.id === id)) {
-        notUnique = false;
+        notUnique = true;
       }
     }
 
