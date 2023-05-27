@@ -8,7 +8,7 @@ import { Planet } from "./Planet";
 export default class Game {
   public readonly id: string;
 
-  private _players: User[];
+  private _players: User[] = [];
   private _isStarted: boolean;
   private _isEnded: boolean;
 

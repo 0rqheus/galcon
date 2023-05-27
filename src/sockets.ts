@@ -1,24 +1,25 @@
 import { Server, Socket } from 'socket.io';
 import Storage from './entities/Storage';
-import { IncomingEvents, OutcomingEvents, GameParticipants, SendUnitsDetails, LobbyList } from './interfaces';
+import { IncomingEvents, OutcomingEvents, GameParticipants, SendUnitsDetails, LobbyList, InputUser } from './interfaces';
 import { User } from './interfaces/User';
 
 export function handleSocketConnection(io: Server, socket: Socket, storage: Storage) {
   console.log(`${socket.id} connected`);
 
-  socket.on(IncomingEvents.CREATE_NEW_GAME, (user: User, callback: (gameId: string) => void) => {
-    const gameId = storage.createNewGame(user);
-    console.log(`send game`, gameId)
+  socket.on(IncomingEvents.CREATE_NEW_GAME, (user: InputUser, callback: (gameId: string) => void) => {
+    const gameId = storage.createNewGame({...user, id: socket.id, isHost: true});
+    console.log(`new game created`, gameId)
+    console.log(user, callback)
     socket.join(gameId);
     callback(gameId);
   });
 
-  socket.on(IncomingEvents.JOIN_GAME, (user: User, gameId: string, callback: (game: GameParticipants) => void) => {
+  socket.on(IncomingEvents.JOIN_GAME, (user: InputUser, gameId: string, callback: (game: GameParticipants) => void) => {
     const game = storage.getGame(gameId)
 
     if (game) {
       console.log(`join to game`, game)
-      game.joinGame(user);
+      game.joinGame({...user, id: socket.id, isHost: false});
 
       io.to(gameId).emit(OutcomingEvents.PLAYER_JOINED, socket.id)
       socket.join(gameId);
