@@ -8,8 +8,8 @@ const socket1 = io("http://localhost:3000");
 const socket2 = io("http://localhost:3000");
 
 let gameId = '';
-let player1 = '';
-let player2 = '';
+let player1Id = '';
+let player2Id = '';
 
 beforeAll((done) => {
   socket1.on('connect', () => {
@@ -24,25 +24,37 @@ afterAll(() => {
 
 describe('Socket.IO events', () => {
   it('should create game', (done) => {
-    player1 = socket1.id;
-    player2 = socket2.id;
+    player1Id = socket1.id;
+    player2Id = socket2.id;
 
-    socket1.emit(IncomingEvents.CREATE_NEW_GAME, (inGameId: any) => {
+    const user1 = { name: 'killme132', color: 'green' };
+    const user2 = { name: 'ihatemylife771', color: 'orange' };
+
+    socket1.emit(IncomingEvents.CREATE_NEW_GAME, user1, (inGameId: any) => {
       gameId = inGameId
       expect(typeof gameId).toBe('string');
       expect(gameId.length).toBeGreaterThan(0);
 
-      socket2.emit(IncomingEvents.JOIN_GAME, gameId, (gameParticipants: any) => {
+      socket2.emit(IncomingEvents.JOIN_GAME, user2, inGameId, (gameParticipants: any) => {
         console.log(gameParticipants)
-        expect(gameParticipants).toMatchObject({ gameId, player1, player2 });
+        console.log('wft???')
+        expect(gameParticipants).toMatchObject(expect.objectContaining({
+          gameId: gameId,
+          players: expect.arrayContaining([
+            expect.objectContaining(user1),
+            expect.objectContaining(user2)
+          ]),
+        }));
 
         socket1.on(OutcomingEvents.GAME_STARTED, (gameDetails: any) => {
           console.log(gameDetails)
           expect(gameDetails).toMatchObject(
             expect.objectContaining({
               id: gameId,
-              player1,
-              player2,
+              players: expect.arrayContaining([
+                expect.objectContaining(user1),
+                expect.objectContaining(user2)
+              ]),
               map: expect.objectContaining({
                 w: expect.any(Number),
                 h: expect.any(Number),
