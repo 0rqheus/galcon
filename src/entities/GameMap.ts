@@ -17,6 +17,7 @@ import { getDistanceBetweenPoints, getRandomFloat } from "../utils/utils";
 import { Point } from "./Point";
 
 import { Planet } from "./Planet";
+import { User } from "../interfaces/User";
 
 export class GameMap {
   private readonly planets: Planet[];
@@ -59,12 +60,12 @@ export class GameMap {
     return getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y);
   }
 
-  public generateMap(ownersId: string[]) {
+  public generateMap(users: User[]) {
     const planetNumber: number = Math.ceil(getRandomFloat(PLANET_N_MIN, PLANET_N_MAX));
 
     // player starter planets
-    for (let i = 0; i < PLAYER_COUNT; i++) {
-      this.planets.push(this.generatePlanet(true, i, ownersId[i]));
+    for (let i = 0; i < users.length; i++) {
+      this.planets.push(this.generatePlanet(true, i, users[i]));
     }
 
     // neutral planets
@@ -76,14 +77,12 @@ export class GameMap {
     return this.planets;
   }
 
-  private generatePlanet(starter: boolean, id: number, owner: string | null) {
-
+  private generatePlanet(starter: boolean, planetId: number, owner: User | null) {
     let fleet: number = Math.ceil(getRandomFloat(HEALTH_MIN, HEALTH_MAX));
-
     let radius: number = Math.floor(getRandomFloat(RADIUS_MIN, RADIUS_MAX));
 
     if (starter) {
-      fleet  = HEALTH_STARTER;
+      fleet = HEALTH_STARTER;
       radius = RADIUS_STARTER;
     }
 
@@ -101,7 +100,7 @@ export class GameMap {
       if (this.planets.length > 0) {
         this.planets.forEach(planet => {
 
-          let overlap: boolean = this.checkOverlap( planet.x, planet.y, planet.rad, x, y, radius);
+          let overlap: boolean = this.checkOverlap(planet.x, planet.y, planet.rad, x, y, radius);
 
           if (overlap) {
             generated = false;
@@ -121,7 +120,7 @@ export class GameMap {
       throw new Error('cannot generate');
     }
 
-    let res: Planet = new Planet(id, owner, radius, fleet, new Point(x, y));
+    let res: Planet = new Planet(planetId, owner, radius, fleet, new Point(x, y));
 
     return res;
   }
@@ -137,7 +136,7 @@ export class GameMap {
     this.planets.forEach((planet) => planet.produceShips());
   }
 
-  getPlanet(id: number) {
-    return this.planets.find((p) => p.id === id);
+  public getPlanet(id: number) {
+    return this.planets.find((p) => p.id === id) || null;
   }
 }

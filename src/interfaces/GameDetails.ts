@@ -1,9 +1,9 @@
 import { PlanetDetails } from "./PlanetDetails"
+import { User } from "./User"
 
 export interface GameDetails {
   id: string,
-  player1: string,
-  player2: string,
+  players: User[],
   map: {
     w: number,
     h: number,

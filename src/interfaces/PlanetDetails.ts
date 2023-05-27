@@ -1,8 +1,9 @@
 import { Point } from "../entities/Point";
+import { User } from "./User";
 
 export interface PlanetDetails {
   id: number,
-  ownerId: string | null,
+  owner: User | null,
   coords: Point,
   radius: number,
   fleet: number,

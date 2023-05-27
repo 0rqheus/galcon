@@ -1,17 +1,18 @@
 import { PlanetDetails } from "../interfaces";
+import { User } from "../interfaces/User";
 import { Point } from "./Point";
 
 export class Planet {
   public readonly id: number;
-  private ownerId: string | null;
+  private _owner: User | null;
   private radius: number;
   private _fleet: number;
   private coords: Point;
   private fleetGenSpeed: number;
 
-  constructor(id: number, ownerId: string | null, size: number, fleet: number, coords: Point) {
+  constructor(id: number, owner: User | null, size: number, fleet: number, coords: Point) {
     this.id = id;
-    this.ownerId = ownerId;
+    this._owner = owner;
     this.radius = size;
     this._fleet = fleet;
     this.coords = coords;
@@ -43,20 +44,16 @@ export class Planet {
     return JSON.stringify(this, null, 2)
   }
 
-  get ownerID() {
-    return this.ownerId;
+  get owner() {
+    return this._owner;
   }
 
-  set owner(newOwnerId: string) {
-    this.ownerId = newOwnerId
+  set owner(newOwner: User | null) {
+    this._owner = newOwner
   }
 
   get fleet(): number {
     return this._fleet;
-  }
-
-  public updateFleet(ships: number) {
-    this._fleet += ships
   }
 
   public produceShips() {
@@ -67,19 +64,19 @@ export class Planet {
 
   public sendFleet() {
     let ships: number = Math.floor(this.fleet / 2);
-    this.updateFleet(-ships);
+    this._fleet -= ships
     return ships;
   }
 
-  public receiveFleet(senderId: string, amount: number) {
-    if (this.owner === senderId) {
+  public receiveFleet(sender: User, amount: number) {
+    if (this.owner?.id === sender.id) {
       this._fleet += amount
     } else {
       if (this.fleet >= amount) {
         this._fleet -= amount
       } else {
         this._fleet += amount - this.fleet
-        this.ownerId = senderId;
+        this.owner = sender;
       }
     }
   }
@@ -87,7 +84,7 @@ export class Planet {
   getPlanetDetails(): PlanetDetails {
     return {
       id: this.id,
-      ownerId: this.ownerId,
+      owner: this.owner,
       coords: this.coords,
       radius: this.radius,
       fleet: this.fleet,

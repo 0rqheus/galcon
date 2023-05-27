@@ -1,5 +1,6 @@
 import { SPEED } from "../config";
 import { GameDetails } from "../interfaces";
+import { User } from "../interfaces/User";
 import { getDistanceBetweenPoints } from "../utils/utils";
 import { GameMap } from "./GameMap";
 import { Planet } from "./Planet";
@@ -7,17 +8,12 @@ import { Planet } from "./Planet";
 export default class Game {
   public readonly id: string;
 
-  private _player1: string;
-  private _player2: string;
+  private _players: User[];
   private _isStarted: boolean;
   private _isEnded: boolean;
 
-  get player1() {
-    return this._player1;
-  }
-
-  get player2() {
-    return this._player2;
+  get players() {
+    return this._players;
   }
 
   get isStarted() {
@@ -32,9 +28,9 @@ export default class Game {
 
   private map: GameMap;
 
-  constructor(gameId: string, owner: string) {
+  constructor(gameId: string, user: User) {
     this.id = gameId;
-    this._player1 = owner;
+    this._players.push({ ...user, isHost: true });
     this.intervals = [];
     this.map = new GameMap();
   }
@@ -44,7 +40,7 @@ export default class Game {
   }
 
   public generateMap() {
-    this.map.generateMap([this.player1, this.player2]);
+    this.map.generateMap(this._players);
   }
 
   public startGame() {
@@ -54,8 +50,13 @@ export default class Game {
     return null;
   }
 
-  public joinGame(playerId: string) {
-    this._player2 = playerId;
+  public joinGame(player: User) {
+    this._players.push(player);
+  }
+
+  public getPlayerById(userId: string) {
+    const targetPlayer = this.players.find((p) => p.id === userId);
+    return targetPlayer || null
   }
 
   public end() {
@@ -70,14 +71,18 @@ export default class Game {
   public sendFleet(playerId: string, sourcePlanetId: number, destinationPlanetId: number) {
     const source = this.map.getPlanet(sourcePlanetId);
     const destination = this.map.getPlanet(destinationPlanetId);
+    const sender = this.getPlayerById(playerId);
 
+    if (!sender) {
+      throw new Error('sender does not exist');
+    }
     if (!source) {
       throw new Error('no source');
     }
     if (!destination) {
       throw new Error('no destination');
     }
-    if (source?.ownerID === playerId) {
+    if (source?.owner?.id !== sender?.id) {
       throw new Error('wrong owner');
     }
     if (source.fleet < 2) {
@@ -87,22 +92,21 @@ export default class Game {
     const unitsAmount = source.sendFleet();
     const timeToReachInSec = this.getTimeToReach(source, destination);
 
-    setTimeout(() => destination.receiveFleet(playerId, unitsAmount), timeToReachInSec);
+    setTimeout(() => destination.receiveFleet(sender, unitsAmount), timeToReachInSec);
 
     return { unitsAmount, timeToReachInSec };
   }
 
-  getTimeToReach(p1: Planet, p2: Planet): number {
+  public getTimeToReach(p1: Planet, p2: Planet): number {
     const dist = getDistanceBetweenPoints(p1.x, p1.y, p2.x, p2.y);
     const timeToReach = dist / SPEED;
     return timeToReach;
   }
 
-  getGameDetails(): GameDetails {
+  public getGameDetails(): GameDetails {
     return {
       id: this.id,
-      player1: this._player1,
-      player2: this._player2,
+      players: this.players,
       map: {
         w: this.map.w,
         h: this.map.h,
