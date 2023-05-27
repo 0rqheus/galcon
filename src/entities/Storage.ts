@@ -47,10 +47,6 @@ export default class Storage {
     return game || null;
   }
 
-  getAllGames() {
-    return this.games.map((game) => game.id);
-  }
-
   /**
    *
    * @returns ids of ended games
