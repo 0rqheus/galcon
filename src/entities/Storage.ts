@@ -1,12 +1,12 @@
 import { generateId } from "../utils/utils";
-import Game from '../entities/Game';
+import Game from "../entities/Game";
 import { User } from "../interfaces/User";
 
 export default class Storage {
-  private readonly _games: Game[]
+  private readonly _games: Game[];
 
   constructor() {
-    this._games = [] as Game[]
+    this._games = [] as Game[];
   }
 
   get games() {
@@ -14,7 +14,7 @@ export default class Storage {
   }
 
   /**
-   * 
+   *
    * @returns gameId
    */
   createNewGame(user: User) {
@@ -28,10 +28,10 @@ export default class Storage {
 
   private createId() {
     let notUnique = true;
-    let id = '';
+    let id = "";
 
     while (notUnique) {
-      notUnique = false
+      notUnique = false;
       id = generateId();
 
       if (this._games.find((g) => g.id === id)) {
@@ -47,12 +47,16 @@ export default class Storage {
     return game || null;
   }
 
+  getAllGames() {
+    return this.games.map((game) => game.id);
+  }
+
   /**
-   * 
+   *
    * @returns ids of ended games
    */
   updateGames() {
-    const updatedGames = [] as { game: Game, winner: User | null }[];
+    const updatedGames = [] as { game: Game; winner: User | null }[];
 
     for (const game of this._games) {
       if (game.isStarted && !game.isEnded) {
@@ -62,7 +66,7 @@ export default class Storage {
           game.update();
         }
 
-        updatedGames.push({ game, winner })
+        updatedGames.push({ game, winner });
       }
     }
 
