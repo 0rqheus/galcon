@@ -1,22 +1,27 @@
 import { generateId } from "../utils/utils";
 import Game from '../entities/Game';
+import { User } from "../interfaces/User";
 
 export default class Storage {
-  private readonly games: Game[]
+  private readonly _games: Game[]
 
   constructor() {
-    this.games = [] as Game[]
+    this._games = [] as Game[]
+  }
+
+  get games() {
+    return this._games;
   }
 
   /**
    * 
    * @returns gameId
    */
-  createNewGame(playerName: string) {
+  createNewGame(user: User) {
     const gameId = this.createId();
-    const game = new Game(gameId, playerName);
+    const game = new Game(gameId, user);
 
-    this.games.push(game);
+    this._games.push(game);
 
     return gameId;
   }
@@ -29,7 +34,7 @@ export default class Storage {
       notUnique = false
       id = generateId();
 
-      if (this.games.find((g) => g.id === id)) {
+      if (this._games.find((g) => g.id === id)) {
         notUnique = true;
       }
     }
@@ -38,7 +43,7 @@ export default class Storage {
   }
 
   getGame(gameId: string) {
-    const game = this.games.find((g) => g.id === gameId);
+    const game = this._games.find((g) => g.id === gameId);
     return game || null;
   }
 
@@ -47,26 +52,20 @@ export default class Storage {
    * @returns ids of ended games
    */
   updateGames() {
-    const endedGames = [] as { gameId: string, winner: string, loser: string }[];
+    const updatedGames = [] as { game: Game, winner: User | null }[];
 
-    for (const game of this.games) {
+    for (const game of this._games) {
       if (game.isStarted && !game.isEnded) {
         const winner = game.getWinner();
 
-        if (winner) {
-          game.end();
-
-          endedGames.push({
-            gameId: game.id,
-            winner,
-            loser: (game.player1 === winner) ? game.player2! : game.player1!
-          });
-        } else {
+        if (!winner) {
           game.update();
         }
+
+        updatedGames.push({ game, winner })
       }
     }
 
-    return endedGames;
+    return updatedGames;
   }
 }

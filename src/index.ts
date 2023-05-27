@@ -11,10 +11,14 @@ const io = new Server(server);
 const storage = new Storage();
 
 setInterval(() => {
-  const endedGameIds = storage.updateGames();
-  endedGameIds.forEach(({ gameId, winner, loser }) => {
-    io.to(winner).emit(OutcomingEvents.WON, gameId);
-    io.to(loser).emit(OutcomingEvents.LOST, gameId);
+  const updatedGames = storage.updateGames();
+
+  updatedGames.forEach(({ game, winner }) => {
+    if(winner) {
+      io.to(game.id).emit(OutcomingEvents.GAME_END, winner, game.players);
+    } else {
+      io.to(game.id).emit(OutcomingEvents.SYNC, game.getGameDetails());
+    }
   })
 }, 500);
 

@@ -3,4 +3,5 @@ export enum IncomingEvents {
   JOIN_GAME = 'JOIN_GAME',
   START_GAME = 'START_GAME',
   SEND_UNITS = 'SEND_UNITS',
+  GET_LOBBY_LIST = 'GET_LOBBY_LIST',
 }
