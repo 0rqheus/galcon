@@ -47,10 +47,14 @@ export class GameMap {
   }
 
   getWinner() {
-    let owners = this.planets.map(planet => planet.owner);
+    const uniqueOwners = new Set(
+      this.planets
+        .map(planet => planet.owner)
+        .filter(((owner) => owner != null))
+    );
 
-    if (owners.every((val, i, arr) => val === arr[0])) {
-      return owners[0];
+    if (uniqueOwners.size === 1) {
+      return Array.from(uniqueOwners.values())[0]
     }
 
     return null;
