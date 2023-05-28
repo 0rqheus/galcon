@@ -7,7 +7,7 @@ export function handleSocketConnection(io: Server, socket: Socket, storage: Stor
   console.log(`${socket.id} connected`);
 
   socket.on(IncomingEvents.CREATE_NEW_GAME, (user: InputUser, callback: (gameId: string) => void) => {
-    const gameId = storage.createNewGame({...user, id: socket.id, isHost: true});
+    const gameId = storage.createNewGame({ ...user, id: socket.id, isHost: true });
     console.log(`new game created`, gameId)
     console.log(user, callback)
     socket.join(gameId);
@@ -19,9 +19,10 @@ export function handleSocketConnection(io: Server, socket: Socket, storage: Stor
 
     if (game) {
       console.log(`join to game`, game)
-      game.joinGame({...user, id: socket.id, isHost: false});
+      const convertedUser = { ...user, id: socket.id, isHost: false };
+      game.joinGame(convertedUser);
 
-      io.to(gameId).emit(OutcomingEvents.PLAYER_JOINED, socket.id)
+      io.to(gameId).emit(OutcomingEvents.PLAYER_JOINED, convertedUser)
       socket.join(gameId);
 
       callback({ gameId: game.id, players: game.players });
