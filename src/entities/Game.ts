@@ -92,7 +92,7 @@ export default class Game {
     const unitsAmount = source.sendFleet();
     const timeToReachInSec = this.getTimeToReach(source, destination);
 
-    setTimeout(() => destination.receiveFleet(sender, unitsAmount), timeToReachInSec);
+    setTimeout(() => destination.receiveFleet(sender, unitsAmount), timeToReachInSec * 1000);
 
     return { unitsAmount, timeToReachInSec };
   }
