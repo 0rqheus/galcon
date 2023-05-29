@@ -66,14 +66,15 @@ export class GameMap {
 
   public generateMap(users: User[]) {
     const planetNumber: number = Math.ceil(getRandomFloat(PLANET_N_MIN, PLANET_N_MAX));
-
+    let i = 0;
+  
     // player starter planets
-    for (let i = 0; i < users.length; i++) {
+    for (; i < users.length; i++) {
       this.planets.push(this.generatePlanet(true, i, users[i]));
     }
 
     // neutral planets
-    for (let i = 0; i < planetNumber; i++) {
+    for (; i < planetNumber; i++) {
       let planet: Planet = this.generatePlanet(false, i + PLAYER_COUNT, null);
       this.planets.push(planet);
     }
