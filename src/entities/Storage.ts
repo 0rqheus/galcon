@@ -47,6 +47,10 @@ export default class Storage {
     return game || null;
   }
 
+  private removeGame(gameId: string) {
+    return this._games.splice(this._games.findIndex((g) => g.id === gameId), 1);
+  }
+
   /**
    *
    * @returns ids of ended games
@@ -58,7 +62,9 @@ export default class Storage {
       if (game.isStarted && !game.isEnded) {
         const winner = game.getWinner();
 
-        if (!winner) {
+        if (winner) {
+          this.removeGame(game.id);
+        } else {
           game.update();
         }
 

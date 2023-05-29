@@ -1,7 +1,7 @@
 import http from "http";
 import { Server } from "socket.io";
 import express, { Express, Request, Response } from "express";
-import { handleSocketConnection } from "./sockets";
+import { handleSocketConnection, updateGames } from "./sockets";
 import Storage from "./entities/Storage";
 import { OutcomingEvents } from "./interfaces";
 
@@ -14,17 +14,7 @@ const io = new Server(server, {
 });
 const storage = new Storage();
 
-setInterval(() => {
-  const updatedGames = storage.updateGames();
-
-  updatedGames.forEach(({ game, winner }) => {
-    if (winner) {
-      io.to(game.id).emit(OutcomingEvents.GAME_END, winner, game.players);
-    } else {
-      io.to(game.id).emit(OutcomingEvents.SYNC, game.getGameDetails());
-    }
-  });
-}, 500);
+setInterval(() => updateGames(io, storage), 500);
 
 io.on("connection", (socket) => handleSocketConnection(io, socket, storage));
 

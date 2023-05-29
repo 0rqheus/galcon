@@ -9,11 +9,20 @@ import {
   InputUser,
 } from "./interfaces";
 
-export function handleSocketConnection(
-  io: Server,
-  socket: Socket,
-  storage: Storage
-) {
+export const updateGames = (io: Server, storage: Storage) => {
+  const updatedGames = storage.updateGames();
+
+  updatedGames.forEach(({ game, winner }) => {
+    if (winner) {
+      io.to(game.id).emit(OutcomingEvents.GAME_END, winner, game.players);
+      io.socketsLeave(game.id);
+    } else {
+      io.to(game.id).emit(OutcomingEvents.SYNC, game.getGameDetails());
+    }
+  });
+}
+
+export const handleSocketConnection = (io: Server, socket: Socket, storage: Storage) => {
   console.log(`${socket.id} connected`);
   socket.join("players");
 
@@ -42,13 +51,13 @@ export function handleSocketConnection(
     ) => {
       const game = storage.getGame(gameId);
 
-    if (game) {
-      console.log(`join to game`, game)
-      const convertedUser = { ...user, id: socket.id, isHost: false };
-      game.joinGame(convertedUser);
+      if (game) {
+        console.log(`join to game`, game)
+        const convertedUser = { ...user, id: socket.id, isHost: false };
+        game.joinGame(convertedUser);
 
-      io.to(gameId).emit(OutcomingEvents.PLAYER_JOINED, convertedUser)
-      socket.join(gameId);
+        io.to(gameId).emit(OutcomingEvents.PLAYER_JOINED, convertedUser)
+        socket.join(gameId);
 
         callback({ gameId: game.id, players: game.players });
       }
