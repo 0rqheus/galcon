@@ -1,9 +1,6 @@
 import { IncomingEvents, OutcomingEvents } from '../src/interfaces';
 import { io } from 'socket.io-client';
 
-// jest.setTimeout(10000);
-
-// todo: run server
 const socket1 = io("http://localhost:3000");
 const socket2 = io("http://localhost:3000");
 
@@ -36,8 +33,6 @@ describe('Socket.IO events', () => {
       expect(gameId.length).toBeGreaterThan(0);
 
       socket2.emit(IncomingEvents.JOIN_GAME, user2, inGameId, (gameParticipants: any) => {
-        console.log(gameParticipants)
-        console.log('wft???')
         expect(gameParticipants).toMatchObject(expect.objectContaining({
           gameId: gameId,
           players: expect.arrayContaining([
@@ -47,7 +42,6 @@ describe('Socket.IO events', () => {
         }));
 
         socket1.on(OutcomingEvents.GAME_STARTED, (gameDetails: any) => {
-          console.log(gameDetails)
           expect(gameDetails).toMatchObject(
             expect.objectContaining({
               id: gameId,
