@@ -1,5 +1,5 @@
 export const MAP_W = 1100
-export const MAP_H = 600
+export const MAP_H = 500
 
 export const PLANET_DISTANCE_DELTA = 9
 
