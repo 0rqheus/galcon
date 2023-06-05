@@ -1,5 +1,5 @@
 export const MAP_W = 1100
-export const MAP_H = 500
+export const MAP_H = 600
 
 export const PLANET_DISTANCE_DELTA = 9
 
@@ -8,6 +8,10 @@ export const SPEED = 50
 export const PLAYER_COUNT = 2
 
 export const ATTEMPTS = 1000
+
+
+
+
 
 
 export const RADIUS_STARTER = 20
