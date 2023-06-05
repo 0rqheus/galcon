@@ -111,7 +111,8 @@ export default class Game {
         w: this.map.w,
         h: this.map.h,
         planetArray: this.map.planetArray.map((p) => p.getPlanetDetails())
-      }
+      },
+      isStarted: this._isStarted
     }
   }
 }

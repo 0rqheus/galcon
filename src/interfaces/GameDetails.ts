@@ -8,5 +8,6 @@ export interface GameDetails {
     w: number,
     h: number,
     planetArray: PlanetDetails[]
-  }
+  },
+  isStarted: boolean
 }
