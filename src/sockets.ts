@@ -109,6 +109,7 @@ export const handleSocketConnection = (io: Server, socket: Socket, storage: Stor
       const lobbyList = games.map((game) => ({
         id: game.id,
         usersAmount: game.players.length,
+        isStarted: game.isStarted,
       }));
       callback(lobbyList);
     }
