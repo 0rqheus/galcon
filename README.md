@@ -8,6 +8,7 @@ Backend server for galcon 2 game. It uses socket.io library to provide real-time
 - __Event__: `CREATE_NEW_GAME`
 
   __Parameters__:
+  * user: `InputUser` - user data with name and color
   * callback: `(gameId: string) => void` — a callback function that returns gameId.
   
   __Description__: Creates new game, subscribes client socket to the game room and invokes the provided 
@@ -16,6 +17,7 @@ Backend server for galcon 2 game. It uses socket.io library to provide real-time
 - __Event__: `JOIN_GAME`
 
   __Parameters__:
+  * user: `InputUser` - user data with name and color
   * gameId: `string` — the Id of the game
   * callback: `(game: GameParticipants) => void` — a callback function that returns game participants.
   
@@ -39,19 +41,25 @@ Backend server for galcon 2 game. It uses socket.io library to provide real-time
   __Description__: Takes a half of the ships from the source planet, starts timer to add them to destination 
   planet after calculated time and emits `SEND_UNITS` event to the game room.
 
+- __Event__: `GET_LOBBY_LIST`
+
+  __Parameters__:
+  * callback: `(lobbyList: LobbyList[]) => void` — a callback function that returns info about lobbies.
+
+
 ### Outcoming events
 
 - __Event__: `PLAYER_JOINED`
 
   __Parameters__:
-  * playerId: `string` — the Id of joined player
+  * player: `User` — user data with name, color and id
   
   __Description__: Emits the event to all players when new player is joined.
 
 - __Event__: `GAME_STARTED`
 
   __Parameters__:
-  * details: `GameDetails` — the game detail
+  * details: `GameDetails` — the game details
   
   __Description__: Emits the event with game detail to all players when host starts the game.
 
@@ -62,16 +70,17 @@ Backend server for galcon 2 game. It uses socket.io library to provide real-time
   
   __Description__: Emits the event to all players when players sends units.
 
-- __Event__: `WON`
+- __Event__: `GAME_END`
 
   __Parameters__:
-  * gameId: `string` — the Id of the game
+  * winner: `User` — winner of the game
+  * players: `User[]` — all participants
   
-  __Description__: Emits the event to winner of the game.
+  __Description__: Emits the event to all players at the end of the game.
 
-- __Event__: `LOST`
+- __Event__: `SYNC`
 
   __Parameters__:
-  * gameId: `string` — the Id of the game
-  
-  __Description__: Emits the event to loser of the game.
+  * detals: `GameDetails` — the game details
+
+  __Description__: Emits the event to all players once in a while to sync data.
